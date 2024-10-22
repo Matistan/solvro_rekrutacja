@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import { getCocktailById, deleteCocktailById, createNewCocktail, getCocktailsFilterAndSort } from '../db/cocktails';
 import { getIngredientById } from '../db/ingredients';
 
+// Get all cocktails with optional filters and sorting
 export const getAllCocktails = async (req: express.Request, res: express.Response): Promise<void> => {
     try {
         const name = (req.query.name || "") as string;
@@ -31,6 +32,7 @@ export const getAllCocktails = async (req: express.Request, res: express.Respons
     }
 };
 
+// Get a single cocktail by ID
 export const getCocktail = async (req: express.Request, res: express.Response): Promise<void> => {
     try {
         const { id } = req.params;
@@ -56,6 +58,7 @@ export const getCocktail = async (req: express.Request, res: express.Response): 
     }
 };
 
+// Create a new cocktail
 export const createCocktail = async (req: express.Request, res: express.Response): Promise<void> => {
     try {
         const { name, category, instruction, ingredients } = req.body;
@@ -65,7 +68,7 @@ export const createCocktail = async (req: express.Request, res: express.Response
             return;
         }
         
-        // Normalize ingredients to always be an array
+        // Check that ingredients is an array
         if (!Array.isArray(ingredients)) {
             res.status(400).send({ error: 'Ingredients should be an array' });
             return;
@@ -77,7 +80,7 @@ export const createCocktail = async (req: express.Request, res: express.Response
             const { ingredientId, amount } = ingredient;
             
             if (!ingredientId || !amount) {
-                res.sendStatus(400); // Bad request if fields are missing
+                res.sendStatus(400);
                 return;
             }
 
@@ -95,7 +98,6 @@ export const createCocktail = async (req: express.Request, res: express.Response
                 }
             }
 
-            // Assuming getIngredients returns a list of all available ingredients from the DB
             const foundIngredient = await getIngredientById(ingredientId);
             
             if (!foundIngredient) {
@@ -115,6 +117,7 @@ export const createCocktail = async (req: express.Request, res: express.Response
     }
 };
 
+// Update a cocktail by ID with optional fields to update
 export const updateCocktail = async (req: express.Request, res: express.Response): Promise<void> => {
     try {
         const { id } = req.params;
@@ -159,6 +162,7 @@ export const updateCocktail = async (req: express.Request, res: express.Response
     }
 };
 
+// Delete a cocktail by ID and return the deleted cocktail
 export const deleteCocktail = async (req: express.Request, res: express.Response): Promise<void> => {
     try {
         const { id } = req.params;
@@ -183,4 +187,3 @@ export const deleteCocktail = async (req: express.Request, res: express.Response
         return;
     }
 };
-

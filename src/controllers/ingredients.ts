@@ -2,6 +2,7 @@ import express from 'express';
 
 import { deleteIngredientById, getIngredientById, createNewIngredient, getIngredientsFilterAndSort } from '../db/ingredients';
 
+// Get all ingredients with optional filters and sorting
 export const getAllIngredients = async (req: express.Request, res: express.Response): Promise<void> => {
     try {
         const name = (req.query.name || "") as string;
@@ -18,18 +19,13 @@ export const getAllIngredients = async (req: express.Request, res: express.Respo
             name: { $regex: name, $options: "i" },
             description: { $regex: description, $options: "i" },
             image: { $regex: image, $options: "i" },
-            // hasAlcohol: hasAlcohol,
         };
 
         if (hasAlcohol) {
-            console.log("hasAlcohol", hasAlcohol);
             filterCriteria.hasAlcohol = hasAlcohol;
         }
 
         const ingredients = await getIngredientsFilterAndSort(filterCriteria, sortCriteria);
-
-        // const ingredients = await getIngredients();
-
 
         res.status(200).json(ingredients).end();
         return;
@@ -40,6 +36,7 @@ export const getAllIngredients = async (req: express.Request, res: express.Respo
     }
 };
 
+// Get a single ingredient by ID
 export const getIngredient = async (req: express.Request, res: express.Response): Promise<void> => {
     try {
         const { id } = req.params;
@@ -65,6 +62,7 @@ export const getIngredient = async (req: express.Request, res: express.Response)
     }
 };
 
+// Delete an ingredient by ID and return the deleted ingredient
 export const deleteIngredient = async (req: express.Request, res: express.Response): Promise<void> => {
     try {
         const { id } = req.params;
@@ -90,6 +88,7 @@ export const deleteIngredient = async (req: express.Request, res: express.Respon
     }
 };
 
+// Create a new ingredient
 export const createIngredient = async (req: express.Request, res: express.Response): Promise<void> => {
     try {
         const { name, description, hasAlcohol, image } = req.body;
@@ -117,6 +116,7 @@ export const createIngredient = async (req: express.Request, res: express.Respon
     }
 };
 
+// Update an ingredient by ID with optional fields to update
 export const updateIngredient = async (req: express.Request, res: express.Response): Promise<void> => {
     try { 
         const { id } = req.params;

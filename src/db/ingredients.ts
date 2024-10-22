@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// Schema for the ingredients
 const IngredientSchema = new mongoose.Schema(
     {
         name: {
@@ -25,6 +26,7 @@ const IngredientSchema = new mongoose.Schema(
 
 export const IngredientModel = mongoose.model("ingredients", IngredientSchema);
 
+// Export functions to interact with the ingredients collection
 export const getIngredientsFilterAndSort = (filterCriteria: Record<string, any>, sortCriteria: Record<string, any>) => IngredientModel.find(filterCriteria).sort(sortCriteria);
 export const getIngredientById = (id: string) => IngredientModel.findById(id);
 export const createNewIngredient = (values: Record<string, any>) => new IngredientModel(values).save().then((ingredient) => ingredient.toObject());
